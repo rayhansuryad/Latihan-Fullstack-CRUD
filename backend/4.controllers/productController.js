@@ -49,9 +49,46 @@ const createProduct = async (req, res, next)=>{
   }
 };
 
+const updateProduct = async (req,res,next)=>{
+  try {
+    const id = req.params.id;
+    const affectedRows = await productService.updateProduct(id, data);
+    if (affectedRows === 0){
+      const error = new Error ('Produk tidak di temukan');
+      error.statusCode = 404;
+      return next(error)
+    }
+    res.status(200).json({
+      success:true,
+      message: "Produk berhasil diperbarui"
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+const deleteProduct = async (req, res, next)=>{
+try {
+  const id = req.params.id;
+  const deletedProduct = await productService.deleteProduct(id);
+  if (!deletedProduct){
+    const error =  Error('Produk tidak ditemukan');
+    error.statusCode = 404;
+    return next(error)
+  }
+  res.status(200).json({
+    success: true,
+    message : "data berhasil di hapus",
+    data : deletedProduct
+  })
+} catch (error) {
+  next(error)
+}
+}
 
 module.exports = {
   getProduct,
   getProductById,
-  createProduct
+  createProduct,
+  updateProduct,
+  deleteProduct
 }

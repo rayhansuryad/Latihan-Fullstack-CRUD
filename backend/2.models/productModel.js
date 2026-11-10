@@ -28,9 +28,37 @@ const createProduct = async (data)=>{
     ...data
   };
 }
+
+const deleteProduct = async (id)=>{
+  const [result] = await db.query(
+    `DELETE  FROM products WHERE id = ?`, [id]
+  )
+  return result.affectedRows;
+}
+
+const updateProduct = async (id, data)=>{
+  const [result] = await db.query(
+    `UPDATE products
+    SET name = ?, sku=?,category=?, stock=?, price=?
+    WHERE id = ?` ,
+    [
+      data.name,
+      data.sku,
+      data.category,
+      data.stock,
+      data.price,
+      id
+    ]
+  )
+  return result.affectedRows;
+}
+
+
 module.exports = 
   {
     getAllProducts,
     getProductById,
     createProduct,
+    updateProduct,
+    deleteProduct
 };
